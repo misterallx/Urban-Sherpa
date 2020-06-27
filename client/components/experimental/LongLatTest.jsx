@@ -5,7 +5,14 @@ import { geocodeByPlaceId, getLatLng } from 'react-google-places-autocomplete';
 
 import Form from '../common/Form';
 import * as apiActions from '../../store/entities/apiActions';
-import { getYelpData, updateUserLocation, getWalkData, getIqAirData, getHealthScore, toggleInitialLoad } from '../../store/entities/mapEntity';
+import {
+  getYelpData,
+  updateUserLocation,
+  getWalkData,
+  getIqAirData,
+  getHealthScore,
+  toggleInitialLoad,
+} from '../../store/entities/mapEntity';
 
 class LongLatTest extends Component {
   /*
@@ -19,7 +26,7 @@ class LongLatTest extends Component {
       lng: -118.470531,
       lat: 33.987854,
     },
-  }
+  };
 
   handleGoogleAutocompleteSelect = async (result) => {
     const { place_id } = result;
@@ -29,12 +36,16 @@ class LongLatTest extends Component {
     console.log('result', latLng);
     this.props.toggleInitialLoad();
     this.props.updateUserLocation(latLng);
-  }
-
+  };
 
   callApis = async () => {
     console.log('Submitted');
-    const { getYelpData, getWalkData, getIqAirData, getHealthScore } = this.props;
+    const {
+      getYelpData,
+      getWalkData,
+      getIqAirData,
+      getHealthScore,
+    } = this.props;
     const { userEnteredLocation } = this.props.map;
 
     try {
@@ -54,16 +65,19 @@ class LongLatTest extends Component {
       yelpGyms: gyms.total,
       yelpRestaurants: restaurants.total,
       walkScore: walkData.walkscore,
-      iqAirScore: iqAirData.data.current.pollution.aqius
-    }
+      iqAirScore: iqAirData.data.current.pollution.aqius,
+    };
 
     getHealthScore(secretSauceObj);
-  }
+  };
 
   displayYelpScore = (restaurants, gyms) => {
     return (
       <div className="yelpsdatacontainer">
-        <img src="http://assets.stickpng.com/images/5842f092a6515b1e0ad75b17.png" width="80"></img>
+        <img
+          src="http://assets.stickpng.com/images/5842f092a6515b1e0ad75b17.png"
+          width="80"
+        ></img>
         <div>{`Restaurants: ${restaurants.total}`}</div>
         <div>{`Gyms: ${gyms.total}`}</div>
       </div>
@@ -83,24 +97,51 @@ class LongLatTest extends Component {
   displayIqAirScore = (iqAirData) => {
     return (
       <div className="iqAirScore">
-        <img src="https://upload.wikimedia.org/wikipedia/en/7/79/IQAir_logo.png" width="100"></img>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/en/7/79/IQAir_logo.png"
+          width="100"
+        ></img>
         <div>{`${iqAirData.data.current.pollution.aqius}`}</div>
       </div>
     );
   };
 
   render() {
-    const { yelpData, walkData, iqAirData, healthScore, healthComputed, initialLoad } = this.props.map;
+    const {
+      yelpData,
+      walkData,
+      iqAirData,
+      healthScore,
+      healthComputed,
+      initialLoad,
+    } = this.props.map;
     const { restaurants, gyms } = yelpData;
 
     return (
       <div className="latlongcontainer">
-        <div className='healthyscorecontainer'>
-          <div className="healthyhoodscore">{!initialLoad && healthComputed && `Healthyhood Score: ${healthScore}`}</div>
+        <div className="healthyscorecontainer">
+          <div className="healthyhoodscore">
+            {!initialLoad &&
+              healthComputed &&
+              `Healthyhood Score: ${healthScore}`}
+          </div>
           <div className="healthyscoredetailscontainer">
-            <div className="yelpscoredetail">{!initialLoad && restaurants && gyms && this.displayYelpScore(restaurants, gyms)}</div>
-            <div className="walkscoredetail">{!initialLoad && walkData.walkscore && this.displayWalkScore(walkData)}</div>
-            <div className="iqairscoredetail">{!initialLoad && iqAirData.data && this.displayIqAirScore(iqAirData)}</div>
+            <div className="yelpscoredetail">
+              {!initialLoad &&
+                restaurants &&
+                gyms &&
+                this.displayYelpScore(restaurants, gyms)}
+            </div>
+            <div className="walkscoredetail">
+              {!initialLoad &&
+                walkData.walkscore &&
+                this.displayWalkScore(walkData)}
+            </div>
+            <div className="iqairscoredetail">
+              {!initialLoad &&
+                iqAirData.data &&
+                this.displayIqAirScore(iqAirData)}
+            </div>
           </div>
         </div>
 
@@ -110,31 +151,35 @@ class LongLatTest extends Component {
             onSelect={this.handleGoogleAutocompleteSelect}
             placeholder={'Please enter an address...'}
           />
-          {!initialLoad && <button className="gethealthbutton" onClick={this.callApis}>Get Health</button>}
+          {!initialLoad && (
+            <button className="gethealthbutton" onClick={this.callApis}>
+              Get Health
+            </button>
+          )}
         </div>
-
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   map: state.map,
-})
+});
 
-const mapDispatchToProps = dispatch => ({
-  updateUserLocation: latLongObj => dispatch(updateUserLocation(latLongObj)),
-  getYelpData: latLongObj => dispatch(getYelpData(latLongObj)),
-  getWalkData: latLongObj => dispatch(getWalkData(latLongObj)),
-  getIqAirData: latLongObj => dispatch(getIqAirData(latLongObj)),
-  getHealthScore: secretSauceObj => dispatch(getHealthScore(secretSauceObj)),
+const mapDispatchToProps = (dispatch) => ({
+  updateUserLocation: (latLongObj) => dispatch(updateUserLocation(latLongObj)),
+  getYelpData: (latLongObj) => dispatch(getYelpData(latLongObj)),
+  getWalkData: (latLongObj) => dispatch(getWalkData(latLongObj)),
+  getIqAirData: (latLongObj) => dispatch(getIqAirData(latLongObj)),
+  getHealthScore: (secretSauceObj) => dispatch(getHealthScore(secretSauceObj)),
   toggleInitialLoad: () => dispatch(toggleInitialLoad()),
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(LongLatTest);
 
 // Old Was needed for testing in return statement
-{/* <div className="formContainer">
+{
+  /* <div className="formContainer">
 <h1>Long Lat Test Form</h1>
 <form onSubmit={this.handleSubmit}> Inherits this from Form component
   <h5>Coordinates</h5>
@@ -150,4 +195,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(LongLatTest);
     {this.renderButton('Submit', 'btnClass')}
   </div>
 </form>
-</div> */}
+</div> */
+}
